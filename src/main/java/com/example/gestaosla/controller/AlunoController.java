@@ -17,38 +17,39 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping
-    public List<Aluno> getAllAluno(){
+    public List<Aluno> getAllAluno() {
         return alunoService.getAllAluno();
     }
 
     @GetMapping("/{matricula}")
-    public ResponseEntity<Aluno> getAlunoById (@PathVariable Long matricula){
+    public ResponseEntity<Aluno> getAlunoById(@PathVariable Long matricula) {
         Optional<Aluno> aluno = alunoService.getAlunoById(matricula);
-        if (aluno.isPresent()){
+        if (aluno.isPresent()) {
             return ResponseEntity.ok(aluno.get());
-        } else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
+
     @PostMapping
     public Aluno
-    createAluno(@RequestBody Aluno aluno){
+    createAluno(@RequestBody Aluno aluno) {
         return alunoService.createAluno(aluno);
     }
 
     @PutMapping("/{matricula}")
-    public ResponseEntity <Aluno> updateAluno (@PathVariable Long matricula, @RequestBody Aluno aluno) {
+    public ResponseEntity<Aluno> updateAluno(@PathVariable Long matricula, @RequestBody Aluno aluno) {
         Aluno updateAluno = alunoService.updateAluno(matricula, aluno);
-        if (updateAluno != null){
-            return  ResponseEntity.ok(updateAluno);
+        if (updateAluno != null) {
+            return ResponseEntity.ok(updateAluno);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{matricula}")
-    public ResponseEntity<Void> deleteAluno (@PathVariable Long matricula){
+    public ResponseEntity<Void> deleteAluno(@PathVariable Long matricula) {
         alunoService.deleteAluno(matricula);
         return
                 ResponseEntity.noContent().build();
