@@ -19,7 +19,7 @@ public class ProjetoService {
         return projetoRepository.findAll();
     }
 
-    public Optional<Projeto> getProfessorById(Long sala) {
+    public Optional<Projeto> getProjetoById(Long sala) {
         return projetoRepository.findById(sala);
     }
 
@@ -28,7 +28,7 @@ public class ProjetoService {
                 projetoRepository.save(projeto);
     }
 
-    public Projeto updateProfessor(Long sala, Projeto projeto) {
+    public Projeto updateProjeto(Long sala, Projeto projeto) {
         Optional<Projeto> existingProjeto= projetoRepository.findById(sala);
         if (existingProjeto.isPresent()) {
             Projeto updateProjeto = existingProjeto.get();
