@@ -13,45 +13,47 @@ import java.util.Optional;
 @RequestMapping("/api/aluno")
 public class AlunoController {
 
-    @Autowired
     private AlunoService alunoService;
 
     @GetMapping
-    public List<Aluno> getAllAluno() {
-        return alunoService.getAllAluno();
+    public CategoriaAluno (CategoriaAluno categoriaAluno) {
+        super();
+		this.categoriaAluno = categoriaAluno;
     }
+    
 
     @GetMapping("/{matricula}")
-    public ResponseEntity<Aluno> getAlunoById(@PathVariable Long matricula) {
-        Optional<Aluno> aluno = alunoService.getAlunoById(matricula);
-        if (aluno.isPresent()) {
-            return ResponseEntity.ok(aluno.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    public  String getTest() {
+		return "Olá, Categoria!";
+
+	}
+
+	@GetMapping("/findById/{id}")
+	public ResponseEntity<Aluno> findById(@PathVariable long id) {
+
+		Aluno aluno = alunoService.findById(id);
+
+		if ( aluno != null) {
+			return new ResponseEntity<Aluno>(aluno, HttpStatus.OK);
+		} else {
+			throw new ResourceNotFoundException("*** Aluno não encontrada! *** ");
+		}
+
+	}
+
+   @GetMapping("/findAll")
+	public ResponseEntity<List<Aluno>> findAll() {
+
+		List<Aluno> alunos = alunoService.findAll();
+
+		return new ResponseEntity<List<Aluno>>(alunos, HttpStatus.OK);
+	}
 
 
-    @PostMapping
-    public Aluno
-    createAluno(@RequestBody Aluno aluno) {
-        return alunoService.createAluno(aluno);
-    }
+    @PostMapping("/save")
+	public ResponseEntity<?> save(@RequestBody Aluno aluno) {
+		alunoService.save(aluno);
+		return ResponseEntity.ok().body("Aluno cadastrado com sucesso");
+	}
 
-    @PutMapping("/{matricula}")
-    public ResponseEntity<Aluno> updateAluno(@PathVariable Long matricula, @RequestBody Aluno aluno) {
-        Aluno updateAluno = alunoService.updateAluno(matricula, aluno);
-        if (updateAluno != null) {
-            return ResponseEntity.ok(updateAluno);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{matricula}")
-    public ResponseEntity<Void> deleteAluno(@PathVariable Long matricula) {
-        alunoService.deleteAluno(matricula);
-        return
-                ResponseEntity.noContent().build();
-    }
 }
