@@ -52,8 +52,59 @@ public class AlunoController {
 
     @PostMapping("/save")
 	public ResponseEntity<?> save(@RequestBody Aluno aluno) {
-		alunoService.save(aluno);
+		Aluno _aluno = alunoService.save(aluno);
+
+		if (_aluno != null) {
+
 		return ResponseEntity.ok().body("Aluno cadastrado com sucesso");
 	}
+
+	throw new ResourceNotFoundException("Conta de usuário já cadastrada!");
+	}
+
+@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody Usuario usuario) {
+
+		Aluno _aluno= alunoService.login(aluno.getEmail(), aluno.getSenha());
+
+		if (_aluno != null) {
+			return ResponseEntity.ok().body(_aluno);
+		}
+		throw new ResourceNotFoundException("Dados Incorretos!!!");
+	}
+	
+	@PutMapping("/alterarSenha/{id}")
+	public ResponseEntity<?> alterarSenha(@PathVariable long id, @RequestBody Aluno aluno) {
+
+		Usuario _usuario = usuarioService.alterarSenha(id, usuario);
+
+		if (_aluno != null) {
+			return ResponseEntity.ok().body("Senha alterada com sucesso!");
+		}
+		throw new ResourceNotFoundException("Erro ao alterar a senha.");
+	}
+	
+	@PutMapping("/inativar/{id}")
+	public ResponseEntity<?> inativar(@PathVariable long id) {
+
+		Aluno _aluno = alunoService.inativar(id);
+
+		if (_aluno != null) {
+			return ResponseEntity.ok().body("Conta de usuário inativada com sucesso!");
+		}
+		throw new ResourceNotFoundException("Erro ao inativar a conta de usuário.");
+	}
+	
+	@PutMapping("/reativar/{id}")
+	public ResponseEntity<?> reativar(@PathVariable long id) {
+
+		Aluno _aluno = alunoService.reativar(id);
+
+		if (_aluno != null) {
+			return ResponseEntity.ok().body("Conta de usuário reativada com sucesso!");
+		}
+		throw new ResourceNotFoundException("Erro ao reativar a conta de usuário.");
+	}
+	
 
 }
