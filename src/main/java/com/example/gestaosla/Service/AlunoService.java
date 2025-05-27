@@ -11,37 +11,123 @@ import java.util.Optional;
 
 @Service
 public class AlunoService {
-    @Autowired
+
     private AlunoRepository alunoRepository;
+public AlunoService(AlunoRepository alunoRepository) {
+		super();
+		this.alunoRepository = alunoRepository;
+	}
 
-    public List<Aluno> getAllAluno() {
-        return alunoRepository.findAll();
-    }
+	public Aluno findById(long id) {
+		Optional<Aluno> aluno = alunoRepository.findById(id);
 
-    public Optional<Aluno> getAlunoById(Long matricula) {
-        return alunoRepository.findById(matricula);
-    }
+		if (aluno.isPresent()) {
+			return aluno.get();
+		}
+		return null;
+	}
 
-    public Aluno createAluno(Aluno aluno) {
-        return
-                alunoRepository.save(aluno);
-    }
+	public List<Aluno> findAll() {
+		List<Aluno> aluno = alunoRepository.findAll();
+		return aluno;
+	}
 
-    public Aluno updateAluno(Long matricula, Aluno aluno) {
-        Optional<Aluno> existingAluno = alunoRepository.findById(matricula);
-        if (existingAluno.isPresent()) {
-            Aluno updateAluno = existingAluno.get();
+	@Transactional
+	public Aluno save(Aluno aluno) {
 
-            updateAluno.setNome(aluno.getNome());
-            updateAluno.setCurso(aluno.getCurso());
-            updateAluno.setTurma(aluno.getTurma());
-            updateAluno.setEmail(aluno.getEmail());
-        }
-        return null;
-    }
+		Aluno _aluno = alunoRepository.findByEmail(aluno.getEmail());
 
-    public void deleteAluno(Long matricula) {
-        alunoRepository.deleteById(matricula);
-    }
+		if (_aluno == null) {
 
+			String senha = Base64.getEncoder().encodeToString(aluno.getSenha().getBytes());
+
+			aluno.setSenha(senha);
+			aluno.setDataCadastro(LocalDateTime.now());
+			aluno.setStatusAluno("ATIVO");
+
+			return alunoRepository.save(aluno);
+		}
+		return null;
+	}
+
+	@Transactional
+	public Aluno login(String email, String senha) {
+
+		Aluno _aluno = usuarioRepository.findByEmail(email);
+
+		if (_aluno != null) {
+			if (_aluno.getStatusUsuario().equals("ATIVO")) {
+				
+				byte[] decodedPass = Base64.getDecoder()
+											.decode(__aluno.getSenha());
+
+				if (new String(decodedPass).equals(senha)) {
+					return _aluno;
+				}
+			}
+		}
+		return null;
+	}
+	
+	@Transactional
+	public Aluno alterarSenha(long id, Aluno aluno) {
+		Optional<Aluno>_aluno = alunoRepository.findById(id);
+		
+		if (_aluno.isPresent()) {
+			Aluno alunoAtualizado = _aluno.get();
+			
+			String senha = Base64.getEncoder()
+									.encodeToString(aluno.getSenha().getBytes());
+
+			alunoAtualizado.setSenha(senha);
+			alunoAtualizado.setDataCadastro(LocalDateTime.now());
+			alunoAtualizado.setStatusAluno("ATIVO");
+
+			return AlunoRepository.save(alunoAtualizado);
+		}
+		return null;
+	}
+	
+	@Transactional
+	public Aluno inativar(long id) {
+		Optional<Aluno> _aluno = alunoRepository.findById(id);
+		
+		String senhaPadrao = "12345678";
+		
+		if (_aluno.isPresent()) {
+			Aluno alunoAtualizado = _aluno.get();
+			
+			String senha = Base64.getEncoder()
+									.encodeToString(senhaPadrao.getBytes());
+
+			 alunoAtualizado.setSenha(senha);
+			 alunoAtualizado.setDataCadastro(LocalDateTime.now());
+			 alunoAtualizado.setStatusAluno("INATIVO");
+
+			return  alunoRepository.save(alunoAtualizado);
+		}
+		return null;
+	}
+
+	@Transactional
+	public Aluno reativar(long id) {
+		Optional<Aluno> _aluno = alunoRepository.findById(id);
+		
+		String senhaPadrao = "12345678";
+		
+		if (_aluno.isPresent()) {
+			Aluno alunoAtualizado = _aluno.get();
+			
+			String senha = Base64.getEncoder()
+									.encodeToString(senhaPadrao.getBytes());
+
+			alunoAtualizado.setSenha(senha);
+			alunoAtualizado.setDataCadastro(LocalDateTime.now());
+			alunoAtualizado.setStatusAluno("ATIVO");
+
+			return alunoRepository.save(alunoAtualizado);
+		}
+		return null;
+	}
 }
+

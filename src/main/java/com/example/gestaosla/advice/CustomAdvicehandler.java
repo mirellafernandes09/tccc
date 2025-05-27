@@ -1,4 +1,4 @@
-package package com.example.gestaosla.controller.advice;
+package  com.example.gestaosla.controller.advice;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
