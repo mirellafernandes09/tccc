@@ -1,81 +1,67 @@
 package br.itb.projeto.sla.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
-@Table (name="projeto")
+@Table(name = "projeto")
 public class Projeto {
 
-	@Id
-	@GeneratedValue
-	private long id;
-	private String tema;
-	private String sala;
-	private String participantes;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
+    @NotBlank(message = "Tema é obrigatório")
+    private String tema;
 
-	@ManyToOne
-	@JoinColumn (name = "aluno_id")
-	private Aluno aluno;
+    @NotBlank(message = "Sala é obrigatória")
+    private String sala;
 
-	
-	public long getId() {
-		return id;
-	}
+    @NotBlank(message = "Participantes são obrigatórios")
+    private String participantes;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "aluno_id")
+    private Aluno aluno;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    // Getters e Setters
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public String getTema() {
-		return tema;
-	}
+    public String getTema() {
+        return tema;
+    }
 
+    public void setTema(String tema) {
+        this.tema = tema;
+    }
 
-	public void setTema(String tema) {
-		this.tema = tema;
-	}
+    public String getSala() {
+        return sala;
+    }
 
+    public void setSala(String sala) {
+        this.sala = sala;
+    }
 
-	public String getSala() {
-		return sala;
-	}
+    public String getParticipantes() {
+        return participantes;
+    }
 
+    public void setParticipantes(String participantes) {
+        this.participantes = participantes;
+    }
 
-	public void setSala(String sala) {
-		this.sala = sala;
-	}
+    public Aluno getAluno() {
+        return aluno;
+    }
 
-
-	public String getParticipantes() {
-		return participantes;
-	}
-
-
-	public void setParticipantes(String participantes) {
-		this.participantes = participantes;
-	}
-
-
-	public Aluno getAluno() {
-		return aluno;
-	}
-
-
-	public void setAluno(Aluno aluno) {
-		this.aluno = aluno;
-	}
-
-
-
-
-	
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
 }

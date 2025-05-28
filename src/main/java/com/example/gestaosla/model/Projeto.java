@@ -1,6 +1,7 @@
-package com.example.gestaosla.model;
+package com.example.gestaosla.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "projeto")
@@ -8,18 +9,26 @@ public class Projeto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long sala;
+    private Long id;
 
+    @NotBlank(message = "Tema é obrigatório")
     private String tema;
+
+    @NotBlank(message = "Participantes são obrigatórios")
     private String participantes;
+
+    @NotBlank(message = "Professor responsável é obrigatório")
     private String professor_ref;
 
-    public Long getSala() {
-        return sala;
+    private String sala;
+
+    // Getters e Setters
+    public Long getId() {
+        return id;
     }
 
-    public void setSala(Long sala) {
-        this.sala = sala;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTema() {
@@ -44,5 +53,13 @@ public class Projeto {
 
     public void setProfessor_ref(String professor_ref) {
         this.professor_ref = professor_ref;
+    }
+
+    public String getSala() {
+        return sala;
+    }
+
+    public void setSala(String sala) {
+        this.sala = sala;
     }
 }

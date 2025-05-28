@@ -1,57 +1,61 @@
 package com.example.gestaosla.controller;
 
-import com.example.gestaosla.model.Projeto;
-import com.example.gestaosla.Service.ProjetoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.gestaosla.model.entity.Projeto;
+import com.example.gestaosla.service.ProjetoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/projeto")
+@RequestMapping("/api/projetos")
 public class ProjetoController {
 
-    @Autowired
-    private ProjetoService projetoService;
+    private final ProjetoService projetoService;
+
+    public ProjetoController(ProjetoService projetoService) {
+        this.projetoService = projetoService;
+    }
+
+    @GetMapping("/test")
+    public String getTest() {
+        return "Olá, Projeto!";
+    }
 
     @GetMapping
-    public List<Projeto> getAllProjeto() {
-        return projetoService.getAllProjeto();
+    public ResponseEntity<List<Projeto>> getAllProjetos() {
+        List<Projeto> projetos = projetoService.getAllProjeto();
+        return ResponseEntity.ok(projetos);
     }
 
-    @GetMapping("/{sala}")
-    public ResponseEntity<Projeto> getProjetoById(@PathVariable Long sala) {
-        Optional<Projeto> projeto = projetoService.getProjetoById(sala);
-        if (projeto.isPresent()) {
-            return ResponseEntity.ok(projeto.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<Projeto> getProjetoById(@PathVariable Long id) {
+        Optional<Projeto> projeto = projetoService.getProjetoById(id);
+        return projeto.map(ResponseEntity::ok)
+                      .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
 
     @PostMapping
-    public Projeto
-    createProjeto(@RequestBody Projeto projeto) {
-        return projetoService.createProjeto(projeto);
+    public ResponseEntity<Projeto> createProjeto(@RequestBody Projeto projeto) {
+        Projeto novoProjeto = projetoService.createProjeto(projeto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(novoProjeto);
     }
 
-    @PutMapping("/{sala}")
-    public ResponseEntity<Projeto> updateProjeto(@PathVariable Long sala, @RequestBody Projeto projeto) {
-         Projeto updateProjeto = projetoService.updateProjeto(sala, projeto);
-        if (updateProjeto != null) {
-            return ResponseEntity.ok(updateProjeto);
+    @PutMapping("/{id}")
+    public ResponseEntity<Projeto> updateProjeto(@PathVariable Long id, @RequestBody Projeto projeto) {
+        Projeto atualizado = projetoService.updateProjeto(id, projeto);
+        if (atualizado != null) {
+            return ResponseEntity.ok(atualizado);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{sala}")
-    public ResponseEntity<Void> deleteProjeto(@PathVariable Long sala) {
-        projetoService.deleteProjeto(sala);
-        return
-                ResponseEntity.noContent().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjeto(@PathVariable Long id) {
+        projetoService.deleteProjeto(id);
+        return ResponseEntity.noContent().build();
     }
 }
